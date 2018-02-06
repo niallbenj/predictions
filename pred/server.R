@@ -2,6 +2,7 @@ library(shiny)
 library(magrittr)
 library(footballstats)
 
+
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
 
@@ -31,10 +32,16 @@ shinyServer(function(input, output) {
     )
   })
 
-  # Connect to redis
-  footballstats::redis_con()
+  # Connect to redis (if not already)
+  tryCatch({
+    rredis::redisCmd('PING')
+    cat('Redis stable ... \n')
+  }, error = function(e) {
+    footballstats::redis_con()
+  })
 
-  getFrame <- function(compID, ssn, mnth) {
+  # Get the data set from the predictions
+  get_frame <- function(compID, ssn, mnth) {
     keys <- paste0('csdm_pred:', compID, ':', ssn, ':', mnth, ':*') %>%
       rredis::redisKeys()
 
@@ -50,13 +57,26 @@ shinyServer(function(input, output) {
     return(totF)
   }
 
+  # --- Convert the data frame to the correct format --- #
+  conv_frame <- function(totF) {
+    totF$week %<>%
+      as.character %>%
+      as.Date(format = '%d.%m.%Y')
+    totF <- totF[
+      totF$week %>%
+        as.integer %>%
+        order, ]
+    totF$week %<>% format('%d/%m')
+    return(totF)
+  }
+
   # Print the entire table ----
   output$view <- renderTable({
     compID <- datasetInput()
     ssn <- seasonInput()
     mnth <- monthInput()
 
-    getFrame(compID, ssn, mnth)
+    results <- get_frame(compID, ssn, mnth) %>% conv_frame()
   })
 
   # Show the first "n" observations ----
@@ -65,7 +85,7 @@ shinyServer(function(input, output) {
     ssn <- seasonInput()
     mnth <- monthInput()
 
-    totF <- getFrame(compID, ssn, mnth)
+    totF <- get_frame(compID, ssn, mnth)
     res <- if (totF %>% nrow %>% `>`(0)) {
       summary(totF)
     } else {
@@ -75,4 +95,5 @@ shinyServer(function(input, output) {
   })
 
 })
+
 
