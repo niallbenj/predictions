@@ -71,18 +71,18 @@ shinyServer(function(input, output) {
         order, ]
     totF$week %<>% format('%d') %>% as.integer
 
-    newF <- data.frame(
-      day = totF$week,
-      month = totF$mnth,
-      season = totF$ssn,
-      home = totF$localteam,
-      away = totF$visitorteam,
-      `predicted-result` = paste0(totF$home, ' - ', totF$away),
-      prediction = totF$prediction,
-      stringsAsFactors = FALSE
-    )
+    #newF <- data.frame(
+    #  day = totF$week,
+    #  month = totF$mnth,
+    #  season = totF$ssn,
+    #  home = totF$localteam,
+    #  away = totF$visitorteam,
+    #  `predicted-result` = paste0(totF$home, ' - ', totF$away),
+    #  prediction = totF$prediction,
+    #  stringsAsFactors = FALSE
+    #)
 
-    return(newF)
+    return(totF)
   }
 
   # Print the entire table ----
@@ -93,7 +93,7 @@ shinyServer(function(input, output) {
 
     results <- get_frame(compID, ssn, mnth) %>% conv_frame()
     rownames(results) <- NULL
-    datatable(results, options = list(dom = 'ftp', rownames = FALSE)) %>% formatStyle(
+    datatable(results, options = list(dom = 'ftp'), rownames = FALSE) %>% formatStyle(
       columns = names(results),
       color = '#FFFFFF',
       backgroundColor = '#212121'
