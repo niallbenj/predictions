@@ -5,25 +5,7 @@ shinyUI(fluidPage(
 
   # App CSS ----
   #theme = "bootstrap.css",
-
-  tags$head(
-    tags$style(HTML("
-      @import url('//fonts.googleapis.com/css?family=Arvo|VT323');
-
-      body, html {
-        background-color: #212121;
-        font-family: 'Arvo', serif;
-        font-weight: 700;
-        line-height: 1.1;
-        color: #FFFFFF;
-      }
-
-      #sidebar {
-        background-color: #F5F5F5;
-        color: #000000;
-      }
-    "))
-  ),
+  includeCSS("~/Desktop/football-project/predictions/pred/styles.css"),
 
   # App title ----
   #titlePanel("Select Options"),
@@ -60,8 +42,9 @@ shinyUI(fluidPage(
       verbatimTextOutput("summary"),
 
       # Output: HTML table with requested number of observations ----
-      tableOutput("view")
+      #tableOutput("view")
 
+      DT::dataTableOutput("view")
     )
   )
 ))

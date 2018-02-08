@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css?family=Josefin+Slab|Special+Elite');
+
+      body, html {
+        background-color: #212121;
+        font-family: 'Special Elite', cursive;
+        font-weight: 700;
+        line-height: 1.1;
+        color: #FFFFFF;
+      }
+
+
+      #view .paginate_button {
+        background: white;
+      }
+
+      #view .dataTables_paginate {
+        color: white; !important
+      }
+
+      #view .dataTables_wrapper {
+        color: white; !important
+      }
+
+      #view .dataTables_filter {
+       color: white; !important
+      }
+
+      #sidebar {
+        background-color: #F5F5F5;
+        color: #000000;
+      }

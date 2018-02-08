@@ -1,6 +1,7 @@
 library(shiny)
 library(magrittr)
 library(footballstats)
+library(DT)
 
 
 # Define server logic required to draw a histogram
@@ -51,6 +52,8 @@ shinyServer(function(input, output) {
         res <- keys[i] %>%
           rredis::redisHGetAll() %>%
           as.data.frame
+        res$month <- mnth
+        res$season <- ssn
         totF %<>% rbind(res)
       }
     }
@@ -66,17 +69,35 @@ shinyServer(function(input, output) {
       totF$week %>%
         as.integer %>%
         order, ]
-    totF$week %<>% format('%d/%m')
-    return(totF)
+    totF$week %<>% format('%d') %>% as.integer
+
+    newF <- data.frame(
+      day = totF$week,
+      month = totF$mnth,
+      season = totF$ssn,
+      home = totF$localteam,
+      away = totF$visitorteam,
+      `predicted-result` = paste0(totF$home, ' - ', totF$away),
+      prediction = totF$prediction,
+      stringsAsFactors = FALSE
+    )
+
+    return(newF)
   }
 
   # Print the entire table ----
-  output$view <- renderTable({
+  output$view <- DT::renderDataTable({
     compID <- datasetInput()
     ssn <- seasonInput()
     mnth <- monthInput()
 
     results <- get_frame(compID, ssn, mnth) %>% conv_frame()
+    rownames(results) <- NULL
+    datatable(results, options = list(dom = 'ftp', rownames = FALSE)) %>% formatStyle(
+      columns = names(results),
+      color = '#FFFFFF',
+      backgroundColor = '#212121'
+    )
   })
 
   # Show the first "n" observations ----
