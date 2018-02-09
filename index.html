@@ -4,12 +4,12 @@
   <title>Welcome to Shiny Server!</title>
   
    <style>
-@import url('https://fonts.googleapis.com/css?family=Josefin+Slab|Special+Elite');
+@import url('https://fonts.googleapis.com/css?family=Montserrat|Raleway:300');
 </style> 
 
   <style type="text/css">
     body, html {
-      font-family: 'Special Elite', cursive;
+      font-family: 'Raleway', sans-serif;
       background-color: #212121;
       color: #FFFFFF;
       margin: 0;
@@ -35,7 +35,7 @@
       margin-top: 14px;
     }
     #titleBar h1 {
-      font-family: 'Josefin Slab', serif;
+      font-family: 'Montserrat', sans-serif;
       margin: 0 auto .5em auto;
       padding: .2em;
       color: #EEE;
@@ -53,7 +53,7 @@
       margin: .3em 0 .3em 0;
     }
     #outer-content {
-      max-width: 910px;
+      max-width: 700px;
       text-align: justify;
       margin-left: auto;
       margin-right: auto;
@@ -69,22 +69,24 @@
       float: left;
       line-height: 24px;
     }
-
-    #shiny{
-      float: left;
-      width: 305px;
+    
+    #shiny iframe {
+      float: middle;
+      display: block;
+      width: 1400px;
+      height: 700px;
       margin-left: auto;
       margin-right: auto;
-      padding-left: 20px;
-    }
-    #shiny iframe {
+      #padding-left: 20px;
       margin-top: 30px;
     }
+
     .caption{
       font-size: 13px;
     }
     code {
       background-color: #212121;
+      color: #F25355;
       border: 1px solid #AAA;
       -webkit-border-radius: 3px;
       -khtml-border-radius: 3px;
@@ -95,17 +97,22 @@
   </style>
 </head>
 <body>
+
+  <!-- Title -->
   <div id="titleBar">
     <div id="container">
       <h1>Predictions And Results</h1>
     </div>
   </div>
+  
+  
   <div id="outer-content">
     To get started, try selecting different options from the panel below. Predictions are made once per week, every Sunday at 22:00 GMT, and will be tagged with either, <code>correct</code> or <code>incorrect</code>. Right now, queries are made based on competition, i.e. the premierleague, the season, and then further split into months of the year. If you run into any problems, then let me know.
+   </div>
+
         <div id="shiny">
-        <iframe src="./pred/" style="border: 0px solid #AAA; width: 870px; height: 500px"></iframe>
-      </div>
-      </div>
+        <iframe src="./pred/" style="border: 0px solid #AAA"></iframe>
+        </div>
   </div>
 </body>
 </html>

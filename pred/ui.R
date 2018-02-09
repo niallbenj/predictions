@@ -5,7 +5,7 @@ shinyUI(fluidPage(
 
   # App CSS ----
   #theme = "bootstrap.css",
-  includeCSS("~/Desktop/football-project/predictions/pred/styles.css"),
+  includeCSS("styles.css"),
 
   # App title ----
   #titlePanel("Select Options"),
@@ -23,7 +23,8 @@ shinyUI(fluidPage(
       # Input: Selector for choosing dataset ----
       selectInput(inputId = "league",
                   label = "Choose a competition:",
-                  choices = c("premier-league", "championship", "france")),
+                  choices = c("premier-league", "championship", "france",
+                              "germany", "italy", "portugal", "turkey")),
 
       selectInput(inputId = "season",
                   label = "Select season (2017='17/'18)",
@@ -32,7 +33,9 @@ shinyUI(fluidPage(
       # Input: Numeric entry for number of obs to view ----
       selectInput(inputId = "month",
                   label = "Month to look at",
-                  choices = c("January", "February"))
+                  choices = c("January", "February", "March", "April",
+                              "May", "June", "July", "August", "September",
+                              "October", "November", "December"))
     ),
 
     # Main panel for displaying outputs ----

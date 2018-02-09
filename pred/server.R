@@ -13,7 +13,11 @@ shinyServer(function(input, output) {
       input$league,
       "premier-league" = 1204,
       "championship" = 1205,
-      "france" = 1206
+      "france" = 1221,
+      "germany" = 1229,
+      "italy" = 1269,
+      "portugal" = 1352,
+      "turkey" = 1425
      )
   })
 
@@ -29,7 +33,17 @@ shinyServer(function(input, output) {
     switch(
       input$month,
       "January" = 1,
-      "February" = 2
+      "February" = 2,
+      "March" = 3,
+      "April" = 4,
+      "May" = 5,
+      "June" = 6,
+      "July" = 7,
+      "August" = 8,
+      "September" = 9,
+      "October" = 10,
+      "November" = 11,
+      "December" = 12
     )
   })
 
@@ -46,6 +60,7 @@ shinyServer(function(input, output) {
     keys <- paste0('csdm_pred:', compID, ':', ssn, ':', mnth, ':*') %>%
       rredis::redisKeys()
 
+    print(keys)
     totF <- data.frame(stringsAsFactors = FALSE)
     if (keys %>% is.null %>% `!`()) {
       for (i in 1:(length(keys))) {
@@ -71,19 +86,32 @@ shinyServer(function(input, output) {
         order, ]
     totF$week %<>% format('%d') %>% as.integer
 
-    #newF <- data.frame(
-    #  day = totF$week,
-    #  month = totF$mnth,
-    #  season = totF$ssn,
-    #  home = totF$localteam,
-    #  away = totF$visitorteam,
-    #  `predicted-result` = paste0(totF$home, ' - ', totF$away),
-    #  prediction = totF$prediction,
-    #  stringsAsFactors = FALSE
-    #)
+    newF <- data.frame(
+      day = totF$week,
+      month = totF$month,
+      season = totF$season,
+      home = totF$localteam,
+      away = totF$visitorteam,
+      `predicted-result` = paste0(totF$home, ' - ', totF$away),
+      prediction = totF$prediction,
+      stringsAsFactors = FALSE
+    )
 
-    return(totF)
+    return(newF)
   }
+
+
+  # --- Convert for summary --- #
+  conv_summary <- function(totF) {
+
+    newF <- data.frame(
+      prediction = totF$prediction,
+      stringsAsFactors = FALSE
+    )
+
+    return(newF)
+  }
+
 
   # Print the entire table ----
   output$view <- DT::renderDataTable({
@@ -106,13 +134,20 @@ shinyServer(function(input, output) {
     ssn <- seasonInput()
     mnth <- monthInput()
 
-    totF <- get_frame(compID, ssn, mnth)
+    totF <- get_frame(compID, ssn, mnth) %>% conv_summary()
     res <- if (totF %>% nrow %>% `>`(0)) {
-      summary(totF)
+      cat(' ## Prediction Summary ## \n\n')
+      nonEmpty <- totF %>% subset(totF$prediction != '-')
+      cat(paste0('     Analysing ', totF %>% nrow, ' match(es)'))
+      cat(paste0(' / ', nonEmpty %>% nrow, ' have been predicted \n\n'))
+      nonEmpty <- totF %>% subset(totF$prediction != '-')
+      if (nonEmpty %>% nrow %>% `>`(0)) {
+        correct <- nonEmpty$prediction %>% `==`('T') %>% sum
+        cat(paste0(' ## Success rate of ', correct/(nonEmpty %>% nrow) *100, '% \n'))
+      }
     } else {
       cat(' ## Nothing to display :( \n ## Try selecting different parameters from the side!')
     }
-    res
   })
 
 })
