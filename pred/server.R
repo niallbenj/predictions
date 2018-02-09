@@ -60,7 +60,6 @@ shinyServer(function(input, output) {
     keys <- paste0('csdm_pred:', compID, ':', ssn, ':', mnth, ':*') %>%
       rredis::redisKeys()
 
-    print(keys)
     totF <- data.frame(stringsAsFactors = FALSE)
     if (keys %>% is.null %>% `!`()) {
       for (i in 1:(length(keys))) {
@@ -111,7 +110,6 @@ shinyServer(function(input, output) {
 
     return(newF)
   }
-
 
   # Print the entire table ----
   output$view <- DT::renderDataTable({
