@@ -95,7 +95,6 @@ shinyServer(function(input, output) {
       prediction = totF$prediction,
       stringsAsFactors = FALSE
     )
-
     return(newF)
   }
 
@@ -122,7 +121,8 @@ shinyServer(function(input, output) {
     datatable(results, options = list(dom = 'ftp'), rownames = FALSE) %>% formatStyle(
       columns = names(results),
       color = '#FFFFFF',
-      backgroundColor = '#212121'
+      backgroundColor = '#212121',
+      textAlign = 'center'
     )
   })
 
